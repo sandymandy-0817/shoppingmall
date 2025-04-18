@@ -1,0 +1,46 @@
+수업내용
+1교시 - PHP쇼핑몰 프로젝트 
+2교시 - PHP쇼핑몰 프로젝트 
+3교시 - PHP쇼핑몰 프로젝트 
+4교시 - PHP쇼핑몰 프로젝트 
+5교시 - 2차 프로젝트 UX/UI DESIGN
+6교시 - 2차 프로젝트 UX/UI DESIGN
+7교시 - 2차 프로젝트 UX/UI DESIGN
+8교시 - 2차 프로젝트 UX/UI DESIGN
+----------------------------
+수업내용
+1. 쇼핑몰
+2. 2차 프로젝트 디자인/개발 발표(04.16)
+
+참고주소
+https://wdesign2010.dothome.co.kr/shop
+-----------------------------------------------------
+회원정보(members) 테이블 설계 
+create table members (
+no int(6) auto_increment primary key,
+mb_id varchar(20) not null,
+mb_name varchar(30) not null,
+mb_password varchar(255) not null,
+mb_email varchar(255) not null,
+mb_address varchar(255) not null, 
+mb_phone varchar(11) not null,
+datetime datetime DEFAULT current_timestamp()
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

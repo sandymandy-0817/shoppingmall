@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>미에로화이버 메인페이지</title>
+  <!-- 여백초기화 -->
+  <link href="./css/reset.css" rel="stylesheet" type="text/css">
+
+  <!-- 기본서식 글자모양, 글자크기, 색상, 링크서식..... -->
+  <link href="./css/base.css" rel="stylesheet" type="text/css">
+
+  <!-- 메인페이지 레이아웃, 콘텐츠 서식 -->
+  <link href="./css/main.css" rel="stylesheet" type="text/css">
+
+  <!-- 제이쿼리 라이브러리 연결하기 -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+  <!-- 제이쿼리 쿠키라이브러리 연결 -->
+	<script src="./script/jquery.cookie.js"></script>
+
+  <!-- 폰트어썸에서 제공하는 아이콘을 삽입주소 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+  <!-- 탭콘텐츠 구현 -->
+  <script src="./script/main_tab_con.js"></script>
+
+  <script>
+    $(document).ready(function(){
+
+      // 모달윈도=팝업레이어
+			// 모달윈도(modal window)는 사용자 인터페이스(UI)디자인 개념에서 자식윈도에서 부모윈도우로 돌아가기 전에 사용자의 상호동작을 요구하는 창을 말한다.
+			//모달윈도는 부모박스를 어둡게 하고 자식박스가 화면에 중앙배치되도록하며, '닫기','오늘 하루열지 않음'기능을 구현한다.
+
+			let modal = `
+				<div class="modal">
+					<div class="modal_inner">
+						<a href="#" title="팝업광고">
+							<img src="./images/banner.jpg" alt="배너광고">
+						</a>
+						<p>
+							<input type="checkbox" id="ch"> <label for="ch">오늘 하루 열지 않음</label>
+							<input type="button" value="닫기" id="c_btn">
+						</p>
+					</div>	
+				</div>
+			`;
+
+			// body태그의 안쪽 뒤에 모달내용을 출력한다.
+			$('body').append(modal);
+
+			//닫기 버튼 누르면 쿠키생성유무를 판단하여 모달윈도우를 닫는다.
+			$('#c_btn').click(function(){
+				closePop();
+			});
+
+			//기존에 쿠키파일이 존재한다면 모달을 띄우지 않게함.
+			if($.cookie('popup')=='none'){
+				$('.modal').hide();
+			}
+			let $ex = $('#ch'); //체크박스 변수
+			//제이쿼리 쿠키 사용법
+			//$.cookie('쿠키이름','쿠키값',{expires:만료일, path:'저장경로'});
+			//https://plugins.jquery.com/cookie/
+
+			//체크박스에 체크를 하였는지 유무를 따지기 위한 함수
+			function closePop(){
+				if($ex.is(':checked')){ //체크가 된 경우  is메서드는 조건이 참'거짓인 경우 실행
+					$.cookie('popup', 'none',{expire:1, path:'/'});
+				}
+				$('.modal').hide(); //쿠키를 생성하고 난뒤에 모달을 숨긴다.
+			}
+
+      //-----모달끝-------------------------------------------------------------------
+
+      let n = 0;
+
+      //슬라이드 페이드인, 아웃 함수
+      function fadeInOut(){
+        //console.log('함수실행');
+        $('#m_slide > img').eq(n).stop().fadeOut();
+        if(n==2){ //만약에 n이 2라면(마지막 이미지라면)
+          n=0; //첫번째 이미지가 보이도록 0을 대입한다.
+        }else{ //그렇지 않다면
+          n++; //1씩 증가하여 다음 이미지가 나오도록 한다.
+        }
+        console.log(n); //0, 1, 2, 0, 1, 2.......
+        $('#m_slide > img').eq(n).stop().fadeIn();
+      }
+
+      function fadeInOut2(){ //0,2,1,0,2,1,0,2,1,0.....
+        $('#m_slide img').eq(n).stop().fadeOut(); //첫번째 슬라이드를 숨긴다.
+        if(n==0){ //처음이미지 일때
+          n=2; //마지막 이미지가 나오게 한다.
+        }else{ //그렇지 않으면
+          n--;  //하나씩 감소하여 이전 이미지가 나오게 한다.
+        }
+        $('#m_slide img').eq(n).stop().fadeIn();
+      }
+
+      //매 5초마다 fadeInOut함수를 실행
+      let Timer = setInterval(fadeInOut, 5000);
+
+      $('#m_slide .l_btn, #m_slide .r_btn').click(function(){
+        fadeInOut();
+      });
+
+      //4. 좌,우 버튼을 클릭시 해당 이미지가 나오게 한다.
+      $('#m_slide .r_btn').click(function(){
+        fadeInOut(); //앞으로가기
+      });
+
+      $('#m_slide .l_btn').click(function(){
+        fadeInOut2(); //뒤로가기
+      });
+
+      $('#m_slide .r_btn, #m_slide .l_btn').hover(function(){ //버튼에 마우스 오버시
+        clearInterval(Timer); //시간을 제거하여 자동으로 플레이되는 것을 막는다.
+      },function(){ //마우스 다시 아웃시
+        Timer = setInterval(fadeInOut, 5000); // 시간을 다시 생성하여 자동으로 움직이게 한다.
+      });
+
+      //--메인 슬라이드 페이드인 페이드 아웃 끝 ----------------------------------------------------------------------
+
+
+      // 이벤트 슬라이드
+      //A insertBefore(B), A insertAfter(B);
+
+      //1. 1번 슬라이드의 앞에 마지막 슬라이드를 배치한다.
+      $('.e_slide_wrap > ul > li:last-child').insertBefore('.e_slide_wrap > ul > li:first-child');
+
+      //2. 1번슬라이드가 중앙에 배치되게 하기 위해서 왼쪽으로 1200픽셀 이동
+      $('.e_slide_wrap > ul').css('margin-left','-1200px');
+
+      //3. 좌측으로 움직이는 함수를 작성한다.
+      function moveLeft(){
+        // console.log('함수테스트');
+        $('.e_slide_wrap > ul').animate({'margin-left':'-2400px'},500,function(){
+          //2번 슬라이드 뒤에 3번 슬라이드를 배치한다.
+          $('.e_slide_wrap > ul > li:first-child').insertAfter('.e_slide_wrap > ul > li:last-child');
+          //좌측으로 한칸 밀리는것을 방지하기 위해 -1200픽셀 이동
+          $('.e_slide_wrap > ul').css('margin-left','-1200px');
+        });
+      }
+
+      //4. 우측으로 움직이는 함수를 작성한다.
+      function moveRight(){
+        $('.e_slide_wrap > ul').animate({'margin-left':'0px'}, function(){
+          //오른쪽 맨끝에 있는 슬라이드를 왼쪽으로 이동한다.
+          $('.e_slide_wrap > ul > li:last-child').insertBefore('.e_slide_wrap > ul > li:first-child');
+          //우측으로 한칸 밀리는것을 방지하기 위해 -1200픽셀 이동
+          $('.e_slide_wrap > ul').css('margin-left','-1200px');
+        });
+      }
+
+      //5. 매 3초마다 함수를 호출하여 슬라이드가 이동되게 한다.
+      let Timer1 = setInterval(moveLeft, 3000);
+
+      //6. 좌, 우측 버튼에 마우스 클릭시 해당 함수 호출하여 슬라이드 움직이게 하기
+      const e_left_btn = $('.e_slide .fa-chevron-left');
+      const e_right_btn = $('.e_slide .fa-chevron-right');
+
+      e_left_btn.click(function(){
+        moveLeft();
+      });
+
+      e_right_btn.click(function(){
+        moveRight();
+      });
+
+      //7. 좌, 우측 버튼에 마우스 오버시 시간을 제거하여 멈추게하고, 아웃시 다시 시간을 생성하여 슬라이드가 움직이게 한다.
+      $('.e_slide i.fa-chevron-left, .e_slide i.fa-chevron-right').hover(function(){
+        clearInterval(Timer1);
+      },function(){
+        Timer1 = setInterval(moveLeft, 3000);
+      });
+
+
+      //----이벤트 슬라이드 끝 --------------------------------------------------------------------
+
+      //----- 윈도우 스크롤 기능을 사용하여 top버튼 만들기 ----------------------------------
+      $(window).scroll(function(){
+
+        let spos1 = $(this).scrollTop(); //세로 스크롤값 구하기
+        let spos2 = $(this).scrollLeft(); //가로 스크롤값 구하기
+
+        console.log(spos1);//세로스크롤값 출력
+        console.log(spos2);//가로스크롤값 출력
+
+        //만약에 세로스크롤값이 1200이상이면 top버튼 나오게 하고
+        if(spos1>=1200){
+          $('.t_btn').fadeIn();
+
+          $('header').addClass('h_act');//헤더를 고정하고
+        }else{ //그렇지 않으면 다시 숨긴다.
+          $('.t_btn').fadeOut();
+          $('header').removeClass('h_act');//헤더고정배치 푼다
+        }
+      });
+
+      //t_btn클릭시 html, body태그를 찾아서 스크롤값이 0이 될때까지 위로 올라간다.
+      $('.t_btn').click(function(){
+        $('html, body').animate({scrollTop:'0px'}, 500);
+        //#때문에 새로고침이 되는데 이것을 막기 위해
+        return false;
+      });
+
+      //-----------------------------------------------------------
+      //2. 갤러리 아래 '더보기'버튼 클릭시 이미지 목록 추가 나오게 함.
+      $('.more').click(function(e) {
+        //비동기 방식으로 새로고침 없이 작업
+        $.ajax({
+          url:'./script/product.json', 
+          type: 'post',
+          dataType:'json',
+          success:function(result) {
+            //alert('정상입니다');
+            let t = '<ul>';
+              $.each (result.product, function(i,e){
+                t+= "<li><img src='./images/" + e.path + "'alt=" + e.tit +"'></li>";
+              });
+            t+='</ul>';
+            $('#list').html(t);
+          }
+        });
+
+        $(this).hide();
+        return false;
+      });
+
+    });
+  </script>
+</head>
+<body>
+  
+  <!-- 상단헤더영역 -->
+  <header>
+    <h1>
+      <a href="index.html" title="메인페이지로 바로가기">
+        <img src="./images/logo2.png" alt="흰색로고">
+      </a>
+    </h1>
+
+    <!-- 메인메뉴 -->
+    <nav class="gnb">
+      <ul>
+        <li><a href="#news" title="미에로" class="arctic_scroll">미에로<i class="fa-solid fa-chevron-down"></i></a>
+          <ul class="sub">
+            <li><a href="#" title="브랜드 스토리">브랜드 스토리</a></li>
+						<li><a href="#" title="식이섬유 스토리">식이섬유 스토리</a></li>
+          </ul>
+        </li>
+        <li><a href="#tab_con" title="제품소개" class="arctic_scroll">제품소개<i class="fa-solid fa-chevron-down"></i></a>
+          <ul class="sub">
+            <li><a href="#" title="미에로화이바">미에로화이바</a></li>
+            <li><a href="#" title="헬씨올리고">헬씨올리고</a></li>
+            <li><a href="#" title="헬씨올리고 프로바이오틱스">헬씨올리고 프로바이오틱스</a></li>
+					</ul>
+        </li>
+        <li><a href="#product" title="미에로 스토리" class="arctic_scroll">미에로 스토리<i class="fa-solid fa-chevron-down"></i></a>
+          <ul class="sub">
+						<li><a href="#" title="TV광고">TV광고</a></li>
+						<li><a href="#" title="인쇄광고">인쇄광고</a></li>
+						<li><a href="#" title="프로모션">프로모션</a></li>
+					</ul>
+        </li>
+        <li><a href="#event" title="미에로 이벤트" class="arctic_scroll">미에로 이벤트<i class="fa-solid fa-chevron-down"></i></a>
+          <ul class="sub">
+            <li><a href="sub04_01.html" title="진행중 이벤트">진행중 이벤트</a></li>
+            <li><a href="sub04_02.html" title="당첨자 발표">당첨자 발표</a></li>
+          </ul>
+        </li>
+        <li><a href="#" title="공지사항">공지사항</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- 메인콘텐츠 영역 -->
+  <main>
+    <!-- 1. 메인 슬라이드 -->
+    <article id="m_slide">
+      <h2>메인 슬라이드</h2>
+      <img src="./images/visual01.jpg" alt="" class="v1">
+      <img src="./images/visual02.jpg" alt="" class="v2">
+      <img src="./images/visual03.jpg" alt="" class="v3">
+      <div class="btn_group">
+        <img src="./images/left.png" alt="" class="l_btn">
+        <img src="./images/right.png" alt="" class="r_btn">
+      </div>
+    </article>
+
+    <!-- 2. 미에로 화이버 공지사항 -->
+    <section id="news">
+      <article>
+        <h2>유튜브 콘텐츠, 공지사항</h2>
+      </article>
+    </section>
+
+    <!-- 3. 탭메뉴 콘텐츠 -->
+    <section id="tab_con">
+      <article>
+        <h2>탭메뉴 콘텐츠</h2>
+        <ul>
+					<li><a href="#" title="" class="t_on">식이섬유란?</a>
+						<div class="cont">
+              <dl>
+							 <dt>식이섬유란?</dt><dd>
+								 사람의 소화효소로 분해되지 않는 성분, 몸 속의 과다한 양분흡수를 막아주고, 장의 리듬을 조절하며,음식물이 장 속에 머무는 시간을 단축시키는 등 현대 식생활에 꼭 필요한 물질로 제 7의 영양소로 주목 받고 있음</dd>
+								 <dd>&#x203b; 출처 : 파워푸드 슈퍼푸드 사전</dd>
+							</dl>
+						</div>
+					</li>
+					
+					<li><a href="#" title="">식이섬유 기능</a>
+						<div class="cont">
+							<dl>
+								<dt>식이섬유의 기능</dt>
+								<dd>1. 배설활동 촉진, 변비 예방</dd>
+								<dd>2. 대사질환에 효과적</dd>
+								<dd>3. 콜레스테롤 감소</dd>
+							</dl>
+						</div>
+					</li>
+					
+					<li><a href="#" title="">식이섬유를 섭취하려면</a>
+						<div class="cont">
+							<dl>
+								<dt>식이섬유를 섭취하려면?</dt>
+								<dd><img src="./images/mcon2_8.png" alt=""></dd>
+								<dd><img src="./images/mcon2_9.png" alt=""></dd>
+								<dd><img src="./images/mcon2_10.png" alt=""></dd>
+							</dl>
+						</div>
+					</li>
+					
+				</ul>
+      </article>
+    </section>
+
+    <!-- 4. 제품소개 -->
+    <section id="product">
+      <article>
+        <h2>제품소개</h2>
+      </article>
+    </section>
+
+    <!-- 5. 이벤트 슬라이드 -->
+    <section id="event">
+      <article class="e_slide">
+        <h2>미에로화이바 Event</h2>
+        <div class="e_slide_wrap">
+          <ul>
+            <li><img src="./images/event01.png" alt=""><p>내용</p></li>
+            <li><img src="./images/event02.png" alt=""><p>내용</p></li>
+            <li><img src="./images/event03.png" alt=""><p>내용</p></li>
+          </ul>
+        </div>
+        <i class="fas fa-chevron-left"></i>
+        <i class="fas fa-chevron-right"></i>
+      </article>
+    </section>
+    
+    <!-- 6. 스토리 갤러리 -->
+    <section id="gallery">
+      <article>
+        <h2>미에로화이바 Girl 스토리 영역</h2>
+        <div class="girl">
+          <figure>
+            <a href="#" title="">
+              <img src="./images/1.jpg" alt="">
+            </a>
+            <figcaption>
+              <a href="#" title="">
+                <h6>TV광고</h6>
+                <p>2020</p>
+                <span>영상보기</span>
+              </a>
+            </figcaption>
+          </figure>
+    
+          <figure>
+            <a href="#" title="">
+              <img src="./images/2.png" alt="">
+            </a>
+            <figcaption>
+              <a href="#" title="">
+                <h6>TV광고</h6>
+                <p>2019</p>
+                <span>영상보기</span>
+              </a>
+            </figcaption>
+          </figure>
+    
+          <figure>
+            <a href="#" title="">
+              <img src="./images/4.png" alt="">
+            </a>
+            <figcaption>
+              <a href="#" title="">
+                <h6>인쇄광고</h6>
+                <p>2020</p>
+              </a>
+            </figcaption>
+          </figure>
+    
+          <figure>
+            <a href="#" title="">
+              <img src="./images/3.jpg" alt="">
+            </a>
+            <figcaption>
+              <a href="#" title="">
+                <h6>인쇄광고</h6>
+                <p>2019</p>
+              </a>
+            </figcaption>
+          </figure>
+    
+          <figure>
+            <a href="#" title="">
+              <img src="./images/5.png" alt="">
+            </a>
+            <figcaption>
+              <a href="#" title="">
+                <h6>인쇄광고</h6>
+                <p>2018</p>
+              </a>
+            </figcaption>
+          </figure>
+    
+          <figure>
+            <a href="#" title="">
+              <img src="./images/6.jpg" alt="">
+            </a>
+            <figcaption>
+              <a href="#" title="">
+                <h6>TV광고</h6>
+                <p>2018</p>
+                <span>영상보기</span>
+              </a>
+            </figcaption>
+          </figure>
+    
+          <figure>
+            <a href="#" title="">
+              <img src="./images/7.png" alt="">
+            </a>
+            <figcaption>
+              <a href="#" title="">
+                <h6>프로모션</h6>
+                <p>2020</p>
+                <span>영상보기</span>
+              </a>
+            </figcaption>
+          </figure>
+    
+          <figure>
+            <a href="#" title="">
+              <img src="./images/8.jpg" alt="">
+            </a>
+            <figcaption>
+              <a href="#" title="">
+                <h6>프로모션</h6>
+                <p>2017</p>
+                <span>영상보기</span>
+              </a>
+            </figcaption>
+          </figure>
+    
+        </div>
+
+        <p class="more_box">
+          <a href="#" title="더보기" class="more">더보기</a>
+        </p>
+
+        <div id="list">
+          <!-- 새로 추가될 갤러리 목록 -->
+        </div>
+
+      </article>
+    </section>
+  </main>
+
+  <!-- 하단푸터영역 -->
+  <footer>
+
+    <a href="#" title="위로 바로가기" class="t_btn">Top</a>
+
+    <address>
+      copyrgiht&copy;2023 미에로화이버 allrights reserved.
+    </address>
+  </footer>
+
+  <!-- 제이쿼리 스크롤 기능 구현을 위한 플러그인 (arctic scroll) -->
+  <script src="./script/jquery.arctic_scroll.js"></script>
+  <script>
+    $(function(){
+      $(".arctic_scroll").arctic_scroll({
+        speed: 800
+      });
+    });
+  </script>
+
+</body>
+</html>

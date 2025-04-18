@@ -1,0 +1,27 @@
+@charset "utf-8";
+
+/* 웹폰트로 폰트설정함 */
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500&display=swap');
+
+
+  body{
+    /* 구글폰트 */
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size:12px;
+    color:#333;
+    overflow-x:hidden;
+  }
+  a{
+    color:#333;
+    text-decoration: none;
+    font-size:12px;
+  }
+
+  /* 푸터영역 서식 */
+  footer{
+    background-color:#333;color:#fff;
+    text-align:center;
+  }
+  footer > address{
+    font-style:normal;line-height:60px;
+  }
